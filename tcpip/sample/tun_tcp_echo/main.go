@@ -53,6 +53,7 @@ func echo(wq *waiter.Queue, ep tcpip.Endpoint) {
 	wq.EventRegister(&waitEntry, waiter.EventIn)
 	defer wq.EventUnregister(&waitEntry)
 
+	log.Printf("%+v", ep)
 	for {
 		v, _, err := ep.Read(nil)
 		if err != nil {
@@ -151,11 +152,16 @@ func main() {
 	if err := s.AddAddress(1, arp.ProtocolNumber, arp.ProtocolAddress); err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("+%v", addr)
 
 	subnet, err := tcpip.NewSubnet(tcpip.Address(strings.Repeat("\x00", len(addr))), tcpip.AddressMask(strings.Repeat("\x00", len(addr))))
 	if err != nil {
 		log.Fatal(err)
 	}
+	if err := s.AddAddressRange(1, proto, subnet); err != nil {
+		log.Fatal(err)
+	}
+
 
 	// Add default route.
 	s.SetRouteTable([]tcpip.Route{
