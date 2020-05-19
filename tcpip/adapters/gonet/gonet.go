@@ -228,6 +228,9 @@ type Conn struct {
 	read buffer.View
 }
 
+func (c Conn) GetEndpoint() (ep tcpip.Endpoint) {
+	return c.ep
+}
 // NewConn creates a new Conn.
 func NewConn(wq *waiter.Queue, ep tcpip.Endpoint) *Conn {
 	c := &Conn{
